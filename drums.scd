@@ -1,6 +1,6 @@
 (
-Tdef(\makeDrums, {
-
+//Tdef(\makeDrums, {
+~makeDrums = {
 SynthDef(\kick, {
 	var sweep = rrand(12, 23);
 	var freq = exprand(40, 58)  * XLine.kr(sweep, 1, 0.01);
@@ -35,7 +35,7 @@ SynthDef(\hat, {
 	var drive = rrand(1.0, 4.0);
 	var modSigs = 3.collect { Pulse.ar(exprand(530, 850), width: rrand(0.1, 0.3) )  * rrand(700, 1000)};
 	var carSigs = 3.collect { |i| Pulse.ar(exprand(1330, 1850) + modSigs[i], width: rrand(0.7, 0.9) )};
-	var sig = (carSigs.sum * drive).wrap(-0.36, 0.46);
+	var sig = (carSigs.sum * drive).wrap(rrand(-0.45, -0.99), rrand(0.45, 0.99));
 	sig = sig!2 * env * \amp.kr(-20.dbamp);
 	sig = LeakDC.ar(sig);
 	sig = Pan2.ar(sig, Rand(-0.8, 0.8));
@@ -58,13 +58,11 @@ SynthDef(\glitch, {
 })
 )
 
-80 / 7
-
 (
 Tdef(\microtracker, {
 
 // microtracker
-~bpm = 80;//rrand(10, 40).postln;
+~bpm = rrand(10, 110).postln;
 ~subdivision = rrand(3, 9);
 ~length = rrand(2, 4);
 ~pattern = ["k" + (~subdivision * ~length - 1).collect { ["k", "s", "h", "g", "."].choose }].asString;
@@ -105,8 +103,11 @@ Tdef(\drums, {
 )
 
 (
+~makeDrums.value;
 Tdef(\microtracker).play;
 Tdef(\drums).play;
-Tdef(\makeDrums).play;
 )
 
+Tdef(\drums).play
+
+~makeDrums.value

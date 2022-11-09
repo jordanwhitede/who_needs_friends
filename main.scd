@@ -1,4 +1,5 @@
-// s.boot;
+s.boot;
+s.quit;
 
 // should i use classes somehow instead of Tdefs?
 
@@ -14,10 +15,10 @@ Routine {
 	loop {
 		x = [0, 1, 2].choose.postln;
 
-		y = case 
-		{ x == 0 } { 10.wait; }
+		case 
+			{ x == 0 } { 10.wait; }
 		{ x == 1 } {  
-			Tdef(\makeDrums).play;
+			~makeDrums.value;
 			Tdef(\microtracker).play; 
 			Tdef(\drums).play; 
 			10.wait;
