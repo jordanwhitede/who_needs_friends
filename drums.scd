@@ -1,3 +1,5 @@
+// micro-tracker heavily inspired by Nathan Ho
+
 (
 //Tdef(\makeDrums, {
 ~makeDrums = {

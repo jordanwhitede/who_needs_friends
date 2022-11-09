@@ -1,38 +1,50 @@
 s.boot;
 s.quit;
 
-// should i use classes somehow instead of Tdefs?
+(
+s.meter;
+s.plotTree;
+)
 
-
-// control structure: 1. Synths/modules/whatever saved in Tdefs. 2. Tdefs selected, triggered (weighted) and stopped/cleared (?) via this control structure
-
-
-// modules: gran sampler, gran reverb, drum machine, nice reverb (just like, NHHall plus bit of extra delay + feedback). silence also has to be an option. 
 
 (
 Routine {
 
 	loop {
-		x = [0, 1, 2].choose.postln;
+		x = [0, 1, 2, 3].wchoose([0.25, 0.15, 0.3, 0.3].normalizeSum);
 
 		case 
 			{ x == 0 } { 10.wait; }
-		{ x == 1 } {  
+			{ x == 1 } {  
 			~makeDrums.value;
 			Tdef(\microtracker).play; 
 			Tdef(\drums).play; 
 			10.wait;
 
 			Tdef(\drums).stop;
-		}
+			}
 
-		{ x == 2 } { 
+			{ x == 2 } { 
 			Tdef(\granular_reverb).play; 
-			10.wait;	
-	};
-	}
+			rrand(120, 290).wait;	
+			~granular_reverb.set(\gate, 0);
+			};
+
+			{ x == 3 } {
+			// this is pretty sloppy, maybe cleanup
+			Tdef(\granular_sampler).play;
+			rrand(120, 380).wait;
+			Tdef(\granular_sampler).stop;
+			~mic.free;
+			~pointer.free;
+			~recordBuffers.free;
+			~micGroup.free; 
+			~recGroup.free;
+			~pointerGroup.free; 
+			~granGroup.free;
+			};
+
+		};
 
 }.play;
 )
-
-s.plotTree;

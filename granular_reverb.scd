@@ -1,3 +1,5 @@
+// thanks to Alik Rustamoff for a lot of this code
+
 (
 SynthDef(\granular_reverb, {
 	|tRate = 20, posRate = 1, rate = 1, offset = 0|
@@ -60,12 +62,26 @@ SynthDef(\granular_reverb, {
 	Out.ar(\out.kr(0), sig.tanh);
 
 }).add;
+
+// lfos - sometime in the future, change to busses
+Ndef(\tRateMFlfo, { LFNoise2.kr(Rand(0.01, 0.075)).range(0.0, 120) });
+Ndef(\tRateMDlfo, { LFNoise2.kr(Rand(0.01, 0.075)).range(0.0, 100) });
+Ndef(\offsetMFlfo, { LFNoise2.kr(Rand(0.01, 0.075)).range(0.0, 4000) });
+Ndef(\offsetMDlfo, { LFNoise2.kr(Rand(0.01, 0.075)).range(0.0, 0.4) });
+Ndef(\rateMFlfo, { LFNoise2.kr(Rand(0.01, 0.075)).range(0, 20.0) });
+Ndef(\rateMDlfo, { LFNoise2.kr(Rand(0.01, 0.075)).range(0, 0.3) });
 )
 
 (
 Tdef(\granular_reverb, {
-x = Synth(\granular_reverb);
-rrand(120, 380).wait;
-x.set(\gate, 0);
+~granular_reverb = Synth(\granular_reverb, [
+	\tRateMF, Ndef(\tRateMFlfo).asMap,
+	\tRateMD, Ndef(\tRateMDlfo).asMap,
+	\offsetMF, Ndef(\offsetMFlfo).asMap,
+	\offsetMD, Ndef(\offsetMDlfo).asMap,
+	\rateMF, Ndef(\rateMFlfo).asMap,
+	\rateMD, Ndef(\rateMDlfo).asMap
+]);
 })
-)
+);
+
